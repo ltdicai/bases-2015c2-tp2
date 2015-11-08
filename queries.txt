@@ -1,5 +1,19 @@
 1) Los empleados que atendieron clientes mayores de edad:
 db.empleados.find({"clientes_mayores": {$exists: true, $not: {$size: 0}}})
 
-5) Cantidad de compras realizadas por clientes de misma edad:
+2) Los artículos más vendidos:
+max_cant_unidades_vendidas = (db.articulos.aggregate([{$group : {_id: null, max : {$max : "$cant_unidades_vendidas"}}}])).next().max
+db.articulos.find("cant_unidades_vendidas" : max_cant_unidades_vendidas)
+
+3) Los sectores donde trabaja exactamente 3 empleados:
+db.sectores.find({"empleados.lista": {$size: 3}})
+
+4) El empleado que trabaja en más sectores:
+var max = db.empleados.aggregate([{$group: {_id:null, max: {$max: {$size: "$sectores"}}}}]).next().max
+db.empleados.find({sectores: {$size: max}})
+
+5) Ranking de los clientes con mayor cantidad de compras
+db.clientes.aggregate([{$sort : {"articulos.total" : -1} } ])
+
+6) Cantidad de compras realizadas por clientes de misma edad:
 db.clientes.aggregate([{$project: {"art_total": "$articulos.total", "edad": 1}}, {$group: {_id: "$edad", total: { $sum: "$art_total"}}}])
