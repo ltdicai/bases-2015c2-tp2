@@ -1,0 +1,91 @@
+Tutorial para configurar Shards en Mongodb:
+==========================================
+
+1) Crear los shards
+
+Para crear un shard realizar:
+	
+    * mkdir -p ./data/localhost10000
+    
+    * mongod --rest --shardsvr --port 10000 --dbpath data/localhost10000 --logpath data/localhost10000/log
+
+Hacer esto según la cantidad de shards que se quiera tener incrementando el nombre del directorio y el puerto (ex. localhost10001). Dejar las instancias corriendo.
+
+2) Crear config server 
+
+    * mkdir -p ./data/localhost10002
+    * mongod --rest --port 10002 --dbpath data/localhost10002 --logpath data/localhost10002/log
+
+    Donde 10002 debe ser el puerto siguiente al último shard, ídem para el directorio.
+
+3) Crear routing service
+
+    * mongos --port 10003 --configdb localhost:10002 > run_routing_service_log
+
+    Donde 10002 es el puerto del config server utilizado en el Paso 2
+
+4) Agregando los Shards
+
+    * mongo localhost:10003
+
+    Donde localhost:10003 es el servicio de routing service
+
+    * Escribir los siguientes comandos
+        * use admin
+        * db.runCommand({addshard:"localhost:10000", name:"shard10000"});
+        * db.runCommand({addshard:"localhost:10001", name:"shard10001"});
+        (realizar estos pasos para todos los shards definidos)
+
+5) Configurando los Shards
+
+    * Crear una base de datos
+        * use test_sharding
+
+    * Habilitar sharding para la base de datos
+
+        * sh.enableSharding("test_sharding")
+
+    * Definir Index y seleccionarlo para sharding
+	
+	En este punto se puede elegir utilizar un indice simple (utilizando {"zip": 1}) o hasheado ({"_id": "hashed"}). 
+	El primero indexa directamente utilizando los valores que posee mientras que el otro aplica una función de hash para distribuir
+	los valores de mejor forma.
+
+        * db.people.ensureIndex({"zip": 1})
+
+	  (deprecado en la versión 3.0, si utiliza esta versión debería cambiar por el comando db.collection.createIndex())
+
+        * sh.shardCollection("test_sharding.people", {"zip": 1} )
+
+    * Insertar datos con respecto al esquema definido . Por ejemplo:
+
+        * db.people.insert({"name": "a1", "password": "a1", .... )
+
+    * Verificar el estado con:
+
+        *   sh.status()
+    
+        *   db.people.getShardDistribution()
+
+	Ejemplo de output:
+
+	mongos> db.people.getShardDistribution()
+
+	Shard shard10000 at localhost:10000
+	 data : 1.98MiB docs : 20001 chunks : 1
+	 estimated data per chunk : 1.98MiB
+	 estimated docs per chunk : 20001
+
+	Shard shard10001 at localhost:10001
+	 data : 5.95MiB docs : 59999 chunks : 1
+	 estimated data per chunk : 5.95MiB
+	 estimated docs per chunk : 59999
+
+	Totals
+	 data : 7.93MiB docs : 80000 chunks : 2
+	 Shard shard10000 contains 25% data, 25% docs in cluster, avg obj size on shard : 104B
+	 Shard shard10001 contains 74.99% data, 74.99% docs in cluster, avg obj size on shard : 104B
+
+
+	mongos> 
+
