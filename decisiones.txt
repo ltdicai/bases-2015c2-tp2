@@ -1,5 +1,5 @@
 Colección 'Artículos':
-- Agregamos en articulo: 'cant_veces_vendido'.
+- Agregamos en articulo: 'cant_unidades_vendidas'.
 - No mantenemos información de los clientes, ya que esta última colección es la que mantiene información de la relación 'compra'
 
 Colección 'Clientes':
