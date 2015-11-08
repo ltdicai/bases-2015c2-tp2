@@ -1,2 +1,5 @@
-Cantidad de compras realizadas por clientes de misma edad:
+1) Los empleados que atendieron clientes mayores de edad:
+db.empleados.find({"clientes_mayores": {$exists: true, $not: {$size: 0}}})
+
+5) Cantidad de compras realizadas por clientes de misma edad:
 db.clientes.aggregate([{$project: {"art_total": "$articulos.total", "edad": 1}}, {$group: {_id: "$edad", total: { $sum: "$art_total"}}}])

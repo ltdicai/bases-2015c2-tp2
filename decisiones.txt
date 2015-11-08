@@ -1,0 +1,7 @@
+Colección 'Artículos':
+- Agregamos en articulo: 'cant_veces_vendido'.
+- No mantenemos información de los clientes, ya que esta última colección es la que mantiene información de la relación 'compra'
+
+Colección 'Clientes':
+- Mantenemos una lista: [{"id_articulo" : #cant}], que admite repetidos en el campo "id_articulo". Esto último facilita la modificación
+del documento, a la hora de agregar una nueva compra. 
