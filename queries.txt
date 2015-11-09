@@ -17,3 +17,19 @@ db.clientes.aggregate([{$sort : {"articulos.total" : -1} } ])
 
 6) Cantidad de compras realizadas por clientes de misma edad:
 db.clientes.aggregate([{$project: {"art_total": "$articulos.total", "edad": 1}}, {$group: {_id: "$edad", total: { $sum: "$art_total"}}}])
+
+MONGODB:
+1) Devolver la cantidad de disposiciones tipo resoluciones que se hayan realizado en Abril del 2013.
+
+var m = function(){ 
+		var month = parseInt((this.FechaDisposicion).split('-')[1]); 
+		if (month == 4 && this.Tipo == "Resoluciones"){ 
+			emit(this.Tipo, 1); 
+		}
+	}
+
+var r = function(key,values) {
+		return Array.sum(values)
+	}
+
+db.disposiciones_2013.mapReduce(m,r,{out: "map_reduce_1"})
