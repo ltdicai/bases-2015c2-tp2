@@ -45,3 +45,6 @@ db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_2"}])
 db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
 db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) = 41642
 db.disposiciones_2012.find().count() + db.disposiciones_2013.find().count() + db.disposiciones_2014.find().count() = 41642
+
+4) Devolver la mayor cantidad de páginas utilizadas por cada tipo de disposición:
+Estrategia: utilizar el operador $substract
