@@ -19,6 +19,7 @@ db.clientes.aggregate([{$sort : {"articulos.total" : -1} } ])
 db.clientes.aggregate([{$project: {"art_total": "$articulos.total", "edad": 1}}, {$group: {_id: "$edad", total: { $sum: "$art_total"}}}])
 
 MONGODB:
+
 1) Devolver la cantidad de disposiciones tipo resoluciones que se hayan realizado en Abril del 2013.
 
 var m = function(){ 
@@ -33,3 +34,14 @@ var r = function(key,values) {
 	}
 
 db.disposiciones_2013.mapReduce(m,r,{out: "map_reduce_1"})
+
+
+2) Devolver la cantidad de disposiciones por cada tipo definido:
+
+var m = function(){ emit(this["Tipo"], 1) }
+var r = function(key,values) { return Array.sum(values); }
+db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_2"})
+db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_2"}])
+db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
+db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) = 41642
+db.disposiciones_2012.find().count() + db.disposiciones_2013.find().count() + db.disposiciones_2014.find().count() = 41642
