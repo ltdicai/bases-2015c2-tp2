@@ -1,0 +1,50 @@
+1) Los empleados que atendieron clientes mayores de edad:
+db.empleados.find({"clientes_mayores": {$exists: true, $not: {$size: 0}}})
+
+2) Los artículos más vendidos:
+max_cant_unidades_vendidas = (db.articulos.aggregate([{$group : {_id: null, max : {$max : "$cant_unidades_vendidas"}}}])).next().max
+db.articulos.find("cant_unidades_vendidas" : max_cant_unidades_vendidas)
+
+3) Los sectores donde trabaja exactamente 3 empleados:
+db.sectores.find({"empleados.lista": {$size: 3}})
+
+4) El empleado que trabaja en más sectores:
+var max = db.empleados.aggregate([{$group: {_id:null, max: {$max: {$size: "$sectores"}}}}]).next().max
+db.empleados.find({sectores: {$size: max}})
+
+5) Ranking de los clientes con mayor cantidad de compras
+db.clientes.aggregate([{$sort : {"articulos.total" : -1} } ])
+
+6) Cantidad de compras realizadas por clientes de misma edad:
+db.clientes.aggregate([{$project: {"art_total": "$articulos.total", "edad": 1}}, {$group: {_id: "$edad", total: { $sum: "$art_total"}}}])
+
+MONGODB:
+
+1) Devolver la cantidad de disposiciones tipo resoluciones que se hayan realizado en Abril del 2013.
+
+var m = function(){ 
+		var month = parseInt((this.FechaDisposicion).split('-')[1]); 
+		if (month == 4 && this.Tipo == "Resoluciones"){ 
+			emit(this.Tipo, 1); 
+		}
+	}
+
+var r = function(key,values) {
+		return Array.sum(values)
+	}
+
+db.disposiciones_2013.mapReduce(m,r,{out: "map_reduce_1"})
+
+
+2) Devolver la cantidad de disposiciones por cada tipo definido:
+
+var m = function(){ emit(this["Tipo"], 1) }
+var r = function(key,values) { return Array.sum(values); }
+db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_2"})
+db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_2"}])
+db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
+db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) = 41642
+db.disposiciones_2012.find().count() + db.disposiciones_2013.find().count() + db.disposiciones_2014.find().count() = 41642
+
+4) Devolver la mayor cantidad de páginas utilizadas por cada tipo de disposición:
+Estrategia: utilizar el operador $substract

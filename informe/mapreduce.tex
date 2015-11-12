@@ -1,0 +1,44 @@
+\section{MapReduce}
+
+\subsection{Cantidad de disposiciones de tipo resoluciones realizadas en Abril del 2013}
+
+\begin{lstlisting}
+var m = function(){
+          var month = parseInt((this.FechaDisposicion).split('-')[1]);
+          if (month == 4 && this.Tipo == "Resoluciones"){
+            emit(this.Tipo, 1);
+          }
+        }
+
+var r = function(key,values) {
+          return Array.sum(values)
+        }
+
+db.disposiciones_2013.mapReduce(m,r,{out: "map_reduce_1"})
+\end{lstlisting}
+
+\vspace{4em}
+
+\subsection{Cantidad de disposiciones por tipo definido}
+
+\begin{lstlisting}
+
+var m = function(){ emit(this["Tipo"], 1) }
+
+var r = function(key,values) { return Array.sum(values); }
+
+db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_2"})
+db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_2"}])
+db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
+
+//Para corroborar que los resultados sean correctos, verificamos que
+//la suma de la cantidad de todos los grupos sea equivalente a la cantidad
+//total de disposiciones
+
+db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) : 41642
+db.disposiciones_2012.find().count() +
+db.disposiciones_2013.find().count() +
+db.disposiciones_2014.find().count() : 41642
+\end{lstlisting}
+
+

@@ -1,0 +1,102 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage[colorlinks=true, linkcolor=black]{hyperref}
+%\usepackage{makeidx}
+%\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{calc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{amsfonts}
+%\lstset{language=C}
+\definecolor{gray}{gray}{0.5}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{orange}{rgb}{1,0.5,0}
+
+\input{page.layout}
+% \setcounter{secnumdepth}{2}
+\usepackage{underscore}
+\usepackage{caratula}
+\usepackage{url}
+\usepackage{float}
+\usepackage[noend]{algpseudocode}
+\usepackage{minted}
+
+\newcommand{\cod}[1]{{\tt #1}}
+\newcommand{\negro}[1]{{\bf #1}}
+\newcommand{\ital}[1]{{\em #1}}
+\newcommand{\may}[1]{{\sc #1}}
+\newcommand{\tab}{\hspace*{2em}}
+
+\hypersetup{
+ pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+ pdfauthor={Grupo},
+ pdfsubject={Dise\~{n}o}
+}
+
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\lstset{escapechar=@}
+
+
+\begin{document}
+
+\thispagestyle{empty}
+\materia{Bases de Datos}
+\submateria{Segundo Cuatrimestre de 2015}
+\titulo{Trabajo Práctico II: Bases de datos NoSql}
+%\subtitulo{Scheduling}
+\integrante{Raul Benitti}{592/08}{raulbenitti@gmail.com }
+\integrante{Damian Castro}{326/11}{ltdicai@gmail.com }
+\integrante{Leandro Matayoshi}{79/11}{leandro.matayoshi@gmail.com }
+\integrante{Javier San Miguel}{786/10}{javiersm00@gmail.com}
+
+\makeatletter
+
+\maketitle
+\newpage
+\input{modelo.tex}
+
+\newpage
+\input{mapreduce.tex}
+
+\thispagestyle{empty}
+\vfill
+
+\thispagestyle{empty}
+\vspace{3cm}
+%\tableofcontents
+\newpage
+
+\newenvironment{myindentpar}[1]
+{\begin{list}{1}
+         {\setlength{\leftmargin}{#1}}
+         \item[]
+}
+{\end{list} }
+
+%\normalsize
+\newpage
+
+% -------------------------------------------------------
+% DER
+% -------------------------------------------------------
+\newpage
+
+
+\bibliographystyle{plain}
+\bibliography{tp3}
+
+\end{document}

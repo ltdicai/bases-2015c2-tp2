@@ -1,0 +1,155 @@
+\section{Modelo}
+
+\subsection{Empleados que atendieron clientes mayores de edad}
+
+\begin{listing}
+\begin{minted}[frame=single,
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  "_id" : ObjectId("5622bf41228da935bd5e0a6a"),
+  "nroLegajo" : 234,
+  "nombre" : "Pepito Suarez",
+  "clientes_mayores" : [
+    {
+      "_id" : ObjectId("5622c1d3228da935bd5e0a6b"),
+      "fecha" : ISODate("2015-10-01T00:00:00Z")
+    }
+  ],
+  "clientes_menores" : [ ],
+  "sectores" : [
+    {
+      "sector" : "Comestibles",
+      "tarea" : "Gerente"
+    },
+    {
+      "sector" : "Indumentaria deportiva",
+      "tarea" : "Supervisor"
+    }
+  ]
+}
+\end{minted}
+\caption{Ejemplo Empleado}
+\label{json-example}
+\end{listing}
+
+\textbf{Consulta: } db.empleados.find(\{``clientes_mayores": \{\$exists: true, \$not: \{\$size: 0\}\}\})
+
+\vspace{3em}
+
+\subsection{Artículos más vendidos}
+\begin{listing}
+\begin{minted}[frame=single,
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  "_id" : ObjectId("5622d234228da935bd5e0a6f"),
+  "codBarras" : 342391,
+  "nombre" : "Pro Speed Z-7",
+  "sector" : "Calzado",
+  "cant_unidades_vendidas" : 0
+}
+\end{minted}
+\caption{Ejemplo Artículo}
+\label{json-example}
+\end{listing}
+
+\textbf{Consulta: }
+\begin{enumerate}
+  \item max_cant_unidades_vendidas = (db.articulos.aggregate([\{\$group : \{_id: null, max : \{\$max : ``\$cant_unidades_vendidas"\}\}\}])).next().max
+  \item db.articulos.find(``cant_unidades_vendidas" : max_cant_unidades_vendidas)
+\end{enumerate}
+
+\vspace{3em}
+
+\subsection{Sectores donde trabajan exactamente 3 empleados}
+\begin{listing}
+\begin{minted}[frame=single,
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  "_id" : ObjectId("5622df91228da935bd5e0a75"),
+  "codSector" : "Comestibles",
+  "empleados" : {
+    "total" : 1,
+    "lista" : [ ObjectId("5622bf41228da935bd5e0a6a") ]
+  }
+}
+\end{minted}
+\caption{Ejemplo Sector}
+\label{json-example}
+\end{listing}
+
+\textbf{Consulta: } db.sectores.find(\{``empleados.lista": \{\$size: 3\}\})
+
+\vspace{3em}
+
+\subsection{Empleado que trabaja en más sectores}
+
+\
+
+\textbf{Consulta: }
+
+\begin{enumerate}
+  \item var max = db.empleados.aggregate([\{\$group: \{\_id:null, max: \{\$max: \{\$size: ``\$sectores"\}\}\}\}]).next().max
+  \item db.empleados.find(\{sectores: \{\$size: max\}\})
+\end{enumerate}
+
+\vspace{3em}
+
+\subsection{Ranking de los clientes con mayor cantidad de compras (total de unidades)}
+
+\begin{listing}
+\begin{minted}[frame=single,
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  "_id" : ObjectId("5622c1d3228da935bd5e0a6b"),
+  "dni" : 28012849,
+  "nombre" : "Julio Jericho",
+  "edad" : 23,
+  "articulos" : {
+    "total" : 4,
+    "lista" : [ {"id": ObjectId("ff20ef41228da935bd5583bd"), "cantidad": 3},
+                {"id": ObjectId("4729bce098bbddee98100acc"), "cantidad": 1}
+              ]
+  }
+}
+
+\end{minted}
+\caption{Ejemplo Cliente}
+\label{json-example}
+\end{listing}
+
+Cuando el cliente compra una cantidad determinada de un producto, se agrega una nueva entrada al
+final del arreglo \emph{lista}, sumando al valor de total la cantidad de unidades compradas
+
+\vspace{3em}
+
+\subsection{Cantidad de compras realizadas por clientes de la misma edad}
+
+\textbf{Consulta: }
+
+db.clientes.aggregate([\{\$project: \{``art_total": ``\$articulos.total", ``edad": 1\}\}, \{\$group: \{_id: ``\$edad", total: \{ \$sum: ``\$art_total"\}\}\}])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
