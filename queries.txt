@@ -46,5 +46,42 @@ db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
 db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) = 41642
 db.disposiciones_2012.find().count() + db.disposiciones_2013.find().count() + db.disposiciones_2014.find().count() = 41642
 
+### new Date(fd).toISOString() == new Date(Date.UTC(2013,01,25)).toISOString();
+// Llevamos ambas fechas a un mismo formato
+
+3) var m = function(){
+                f_boja = this["FechaBOJA"].split('/');
+                boja_day = f_boja[0];
+                boja_month = f_boja[1] - 1;
+                boja_year = f_boja[2];
+                f_boja_iso_string = (new Date(Date.UTC(boja_year, boja_month, boja_day))).toISOString();
+                emit(f_boja_iso_string,1);
+
+                if (typeof(this["FechaDisposicion"]) === 'string') {
+                        f_disposicion = this["FechaDisposicion"];
+                        if (f_disposicion.split('-').length == 3) {
+                                if (f_disposicion.indexOf('T') >= -1){
+                                        if (!isNaN(Date.parse(f_disposicion))){
+                                            f_disposicion_iso_string = (new Date(f_disposicion)).toISOString();
+                                            emit(f_disposicion_iso_string,1);
+
+                                        }
+                                }else{
+                                        f_disposicion = this["FechaDisposicion"].split('-');
+                                        disposicion_day = f_disposicion[0];
+                                        disposicion_month = f_disposicion[1] - 1;
+                                        disposicion_year = f_disposicion[2];
+                                        f_disposicion_iso_string = (new Date(Date.UTC(disposicion_year, disposicion_month, disposicion_monthosicion_day))).toISOString();
+                                }
+                        }
+                }
+           }
+
+var r = function(key, values) { return Array.sum(values) ; }
+
+db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_3"})
+db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_3"}})
+db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_3"}})
+
 4) Devolver la mayor cantidad de páginas utilizadas por cada tipo de disposición:
 Estrategia: utilizar el operador $substract
