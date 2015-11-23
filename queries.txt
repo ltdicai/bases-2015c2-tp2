@@ -82,6 +82,29 @@ var r = function(key, values) { return Array.sum(values) ; }
 db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_3"})
 db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_3"}})
 db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_3"}})
+db.map_reduce_3.aggregate([{$group : {_id: null, max_repeticiones: { $max : "$value"} } }])
 
 4) Devolver la mayor cantidad de páginas utilizadas por cada tipo de disposición:
 Estrategia: utilizar el operador $substract
+El reduce debe mantener la máxima diferencia sobre tipo de disposición
+
+var m = function(){
+	pagina_inicial = this["PaginaInicial"]
+	pagina_final = this["PaginaFinal"]
+	emit(this["Tipo"], pagina_final - pagina_inicial)
+}
+
+var r = function(key, values){
+	var max = 0;
+	// Calculo del maximo
+	for(var i=0; i<values.length; i++){
+		if (values[i] > max){
+			max = values[i];
+		}
+	}
+	return max;
+}
+
+db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_4"})
+db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_4"}})
+db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_4"}})
