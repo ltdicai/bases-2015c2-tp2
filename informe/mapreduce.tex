@@ -2,43 +2,146 @@
 
 \subsection{Cantidad de disposiciones de tipo resoluciones realizadas en Abril del 2013}
 
+Por cada disposición, si cumple con las restricciones emitimos como clave: ``Resoluciones", y
+1 como valor. El reduce consiste simplemente en la suma de todos los values.
+
 \begin{lstlisting}
 var m = function(){
-          var month = parseInt((this.FechaDisposicion).split('-')[1]);
-          if (month == 4 && this.Tipo == "Resoluciones"){
-            emit(this.Tipo, 1);
-          }
-        }
+  var date = convertDate(this.FechaDisposicion);
+  if(date){
+    var month = date.getMonth();
+    if (month == 3 && this.Tipo == "Resoluciones"){
+      emit(this.Tipo, 1);
+    }
+  }
+}
 
 var r = function(key,values) {
-          return Array.sum(values)
-        }
+    return Array.sum(values)
+}
 
-db.disposiciones_2013.mapReduce(m,r,{out: "map_reduce_1"})
+printjson(db.disposiciones.mapReduce(m,r,{out: {inline: 1},
+          scope: {convertDate: convertDate}}));
 \end{lstlisting}
 
 \vspace{4em}
 
 \subsection{Cantidad de disposiciones por tipo definido}
 
+Este caso consiste en un agrupamiento por ``Tipo" con la suma de la cantidad de documentos
+como valor. Por lo tanto, la clave en este caso es el tipo de la disposición. Al igual que
+en el caso anterior, se emite 1 como valor por cada documento y al reducir se suman todos
+los valores.
+
+\begin{lstlisting}
+var m = function(){
+  if (this.Tipo != ""){
+    emit(this["Tipo"], 1);
+  }
+}
+var r = function(key, values) {
+  return Array.sum(values);
+}
+
+printjson(db.disposiciones.mapReduce(m,r,{out: {inline: 1}}));
+\end{lstlisting}
+
+\subsection{Fecha más citada para todos los informes}
+
+Utilizamos la función convertDate para transformar las distintas fechas a un formato
+común. Las fechas se presentan como day-month-year, day/month/year o en formato iso:
+2015-11-21T01:51:17Z.
+
+Las claves son las fechas normalizadas, y emitimos 1 como valor tanto por la \emph{FechaBOJA}
+como por la \emph{FechaDisposicion}.
+
 \begin{lstlisting}
 
-var m = function(){ emit(this["Tipo"], 1) }
+var m = function(){
+  var fecha_boja = convertDate(this.FechaBOJA);
+  var fecha_disp = convertDate(this.FechaDisposicion);
+  if (fecha_boja){
+    emit(fecha_boja, 1);
+  }
+  if(fecha_disp){
+    emit(fecha_disp, 1);
+  }
+}
+var r = function(key, values) {
+  return Array.sum(values);
+}
 
-var r = function(key,values) { return Array.sum(values); }
 
-db.disposiciones_2012.mapReduce(m,r,{out: "map_reduce_2"})
-db.disposiciones_2013.mapReduce(m,r,{out: {reduce : "map_reduce_2"}])
-db.disposiciones_2014.mapReduce(m,r,{out: {reduce : "map_reduce_2"}})
+var res = db.disposiciones.mapReduce(m,r,{out: {inline: 1},
+                                    scope: {convertDate: convertDate}})
+printjson(res);
 
-//Para corroborar que los resultados sean correctos, verificamos que
-//la suma de la cantidad de todos los grupos sea equivalente a la cantidad
-//total de disposiciones
+//Find max
+var max = null;
+for(var idx = 0; idx < res.results.length; ++idx){
+  var item = res.results[idx];
+  if(max){
+    if (Math.max(max.value, item.value) != max.value) max = item;
+  }
+  else{
+    max = item;
+  }
+}
 
-db.map_reduce_2.aggregate( [ {$group : {_id:null, total: {$sum : "$value"}}} ] ) : 41642
-db.disposiciones_2012.find().count() +
-db.disposiciones_2013.find().count() +
-db.disposiciones_2014.find().count() : 41642
+printjson(max);
+
 \end{lstlisting}
+
+\subsection{Devolver la mayor cantidad de páginas utilizadas por cada tipo de disposición}
+
+La consulta consiste en un agrupamiento sobre tipo de disposición
+con agregación sobre el máximo de las páginas utilizadas.
+
+Por lo tanto emitimos el tipo de documento como clave y la cantidad de páginas utilizadas
+como valor. El reduce encuentra el máximo sobre la lista de valores.
+
+\begin{lstlisting}
+var m = function(){
+  var pagina_inicial = this["PaginaInicial"],
+    pagina_final = this["PaginaFinal"];
+  emit(this["Tipo"], pagina_final - pagina_inicial)
+}
+
+var r = function(key, values){
+  var max = 0;
+  // Calculo del maximo
+  for(var i = 0; i < values.length; ++i){
+    if (values[i] > max){
+      max = values[i];
+    }
+  }
+  return max;
+}
+
+var res = db.disposiciones.mapReduce(m, r, {out: {inline: 1}})
+printjson(res);
+\end{lstlisting}
+
+\subsection{Función para convertir las fechas}
+
+\begin{lstlisting}
+function convertDate(str){
+  if(str == "") return null;
+  if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z?$/.test(str)){
+    return new Date(str.replace(/^00/, "20"));
+  }
+  else if(/^\d{2}[-\/]\d{2}[-\/]\d{4}$/.test(str)){
+    var parts = str.split(/[-\/]/);
+    var aux = parts[0];
+    parts[0] = parts[2];
+    parts[2] = aux;
+    return new Date(parts.join("-"));
+  }
+  else{
+    return null;
+  }
+}
+\end{lstlisting}
+
 
 
