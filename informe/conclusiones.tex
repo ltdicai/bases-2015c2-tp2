@@ -1,0 +1,29 @@
+\section{Conclusiones}
+
+En el transcurso del desarrollo de este trabajo nos enfrentamos con problemas de diseño e implementación
+típicos en el uso de bases NoSQL. Entre ellos:
+
+\begin{itemize}
+  \item Representar la información para prescindir del uso de join, tratando de mantener un balance entre
+la consistencia de los datos y la atomicidad de las operaciones.
+  \item  Extraer información
+utilizando la técnica de MapReduce, en la cual el propio programador debe cumplir un rol que suele relegarse al motor de bases de dato relacionales
+  \item Dividir de forma adecuada los datos a fin de lograr escalabilidad.
+\end{itemize}
+
+A partir de todo esto, llegamos a entender que las bases de datos NoSQL pueden ser muy útiles en situaciones particulares en las que, entre otras cosas:
+\begin{itemize}
+  \item Las consultas que se realizaran sobre los datos son prefijadas o predecibles
+  \item No se requiera realizar consultas arbitrarias
+  \item La consistencia de la informacion no es un factor relevante (aunque existen bases NoSQL que cumplen con ACID, no son la mayoría ni las más utilizadas)
+  \item Se espera que el sistema deba procesar cantidades extremadamente grandes de información de manera eficaz
+  \item Se espera que millones de usuarios utilicen el sistema de manera concurrente
+\end{itemize}
+
+Todas estas características no implican descartar el uso de bases de datos relaciones sino que, si dichas circunstancias están presente, permiten evaluar
+la conveniencia de dejar de lado la complejidad en que incurren las bases relacionales que cumplen con las propiedades ACID por otras bases con una mecánica simplificada a costa de
+no hacerlo.
+
+En definitiva, las bases de datos NoSQL no vienen a reemplazar a las bases relacionales - las complementan, poniendo a disposición de los desarrolladores
+más herramientas con las que encontrar soluciones eficaces a los problemas cada
+vez más complejos con los que se enfrenta el mundo de la administración de información.
