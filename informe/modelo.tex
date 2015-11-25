@@ -1,6 +1,18 @@
 \section{Modelo}
 
+Como regla general, el modelo está pensado en función de las consultas que se desea responder.
+Para ello, utilizamos la desnormalización y la redundancia de datos como mecanismos válidos para
+poder resolver las consultas rápida y eficientemente.
+
+Esto produce como consecuencia la posibilidad de producir inconsistencias en la base de datos.
+Por lo tanto, es responsabilidad del programador realizar los chequeos correspondientes a la hora
+de insertar, modificar o eliminar datos.
+
 \subsection{Empleados que atendieron clientes mayores de edad}
+
+Para poder satisfacer los requerimientos de la query, mantenemos en la colección \emph{Empleados}
+una lista de clientes, que contiene los identificadores de cada uno. Para esto utilizamos 2 arreglos,
+diferenciando entre clientes mayores y menores de edad.
 
 \begin{listing}
 \begin{minted}[frame=single,
@@ -40,6 +52,12 @@
 \vspace{3em}
 
 \subsection{Artículos más vendidos}
+
+Agregamos en un atributo \emph{cant\_unidades\_vendidas} que nos permite encontrar el máximo
+muy eficientemente.
+No mantenemos información acerca de los clientes que compraron ese producto, ya que esta
+última colección es la encargada de llevar ese registro.
+
 \begin{listing}
 \begin{minted}[frame=single,
                framesep=3mm,
@@ -59,14 +77,20 @@
 \end{listing}
 
 \textbf{Consulta: }
+
+En primer lugar, realizamos una agregación con un único grupo: \emph{\_id: null}, mediante la cual
+encontramos el máximo entre todas las cantidades vendidas.
+Luego realizamos una nueva query, fitrando por igualdad sobre dicha máxima cantidad obtenida.
+
 \begin{enumerate}
   \item max_cant_unidades_vendidas = (db.articulos.aggregate([\{\$group : \{_id: null, max : \{\$max : ``\$cant_unidades_vendidas"\}\}\}])).next().max
-  \item db.articulos.find(``cant_unidades_vendidas" : max_cant_unidades_vendidas)
+  \item db.articulos.find(\{``cant_unidades_vendidas" : max_cant_unidades_vendidas\})
 \end{enumerate}
 
-\vspace{3em}
-
 \subsection{Sectores donde trabajan exactamente 3 empleados}
+
+La colección \emph{Sectores} mantiene una lista con los ids de los empleados que trabajan en él.
+
 \begin{listing}
 \begin{minted}[frame=single,
                framesep=3mm,
@@ -77,7 +101,6 @@
   "_id" : ObjectId("5622df91228da935bd5e0a75"),
   "codSector" : "Comestibles",
   "empleados" : {
-    "total" : 1,
     "lista" : [ ObjectId("5622bf41228da935bd5e0a6a") ]
   }
 }
@@ -85,6 +108,7 @@
 \caption{Ejemplo Sector}
 \label{json-example}
 \end{listing}
+
 
 \textbf{Consulta: } db.sectores.find(\{``empleados.lista": \{\$size: 3\}\})
 
@@ -96,6 +120,9 @@
 
 \textbf{Consulta: }
 
+La consulta es análoga a ``artículos más vendidos". En primera instancia encontramos el máximo, y luego
+seleccionamos aquellos documentos con valor igual a dicho máximo.
+
 \begin{enumerate}
   \item var max = db.empleados.aggregate([\{\$group: \{\_id:null, max: \{\$max: \{\$size: ``\$sectores"\}\}\}\}]).next().max
   \item db.empleados.find(\{sectores: \{\$size: max\}\})
@@ -104,6 +131,13 @@
 \vspace{3em}
 
 \subsection{Ranking de los clientes con mayor cantidad de compras (total de unidades)}
+
+El cliente mantiene una lista con los artículos que compra.
+Cuando el cliente compra una cantidad determinada de un producto, se agrega una nueva entrada al
+final de \emph{lista}, sumando al valor de total la cantidad de unidades compradas. Este campo
+admite repetidos sobre \emph{id}, lo cual agrega eficiencia a la hora de insertar una nueva compra.
+
+\vspace{3em}
 
 \begin{listing}
 \begin{minted}[frame=single,
@@ -129,14 +163,23 @@
 \label{json-example}
 \end{listing}
 
-Cuando el cliente compra una cantidad determinada de un producto, se agrega una nueva entrada al
-final del arreglo \emph{lista}, sumando al valor de total la cantidad de unidades compradas
+\textbf{Consulta: }
 
-\vspace{3em}
+El ranking está determinado por un ordenamiento descendente sobre el total de compras
+realizadas por cada cliente.
+
+~
+
+db.clientes.aggregate([\{\$sort : \{``articulos.total" : -1\} \} ])
 
 \subsection{Cantidad de compras realizadas por clientes de la misma edad}
 
 \textbf{Consulta: }
+
+Agrupamos los documentos por edad proyectando el total de artículos comprados.
+Finalmente realizamos una agregación sobre cada grupo, sumando $total$.
+
+~
 
 db.clientes.aggregate([\{\$project: \{``art_total": ``\$articulos.total", ``edad": 1\}\}, \{\$group: \{_id: ``\$edad", total: \{ \$sum: ``\$art_total"\}\}\}])
 
