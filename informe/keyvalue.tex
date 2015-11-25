@@ -1,0 +1,70 @@
+\section{Key-Value como alternativa}
+
+\subsection{General}
+Elegimos ejemplificar los cambios que implicaría utilizar una base de datos Key-Value.
+Este tipo de bases está muy relaciono con las bases de datos Document, consideradas como una versión más potente de las primeras.
+Ambas mantiene una _clave_ relacionada con un único _valor_, y esta relación define el límite de atomicidad. Además,
+si bien en ambos tipos de bases de datos pueden modelarse relaciones entre entidades, la coherencia y validez de estas relaciones
+deben ser mantenidad por el programador desde el código de la aplicación.
+
+La diferencia fundamental entre ambos tipos radica en que, en las bases Key-Values, el _valor_ solo se considera como una cadena de bits
+sin semántica, por lo que cualquier información que allí se guarde resulta inútil a fines de consulta y procesamiento directo: en una
+base Key-Value, la única manera de acceder a un dato es sabiendo bajo que clave se almacena. En cambio, las bases de datos de documentos sí otorgan
+una semántica a los valores relacionados a una clave - la idea de un documento con campos definidos. Esto les permite proveer operaciones
+de búsqueda y agregación más cercanas a aquellas encontradas en bases de datos relacionales.
+
+\subsection{Punto 1}
+Como en las bases Key-Value no hay acceso posible a los datos si no se
+especifican las claves, a diferencia del modelo realizado en Document DB, necesitamos mantener
+información explícita sobre las claves de las entidades que vamos a almacenar. Por esto, utilizaríamos un bucket Claves con
+
+~
+
+  claves[``empleados"] $\rightarrow$ {[nroLegajo]}
+
+  claves[``productos"] $\rightarrow$ {[codigoDeBarra]}
+
+  claves[``sectores"]  $\rightarrow$ {[codigoSector]}
+
+  claves[``clientes"]  $\rightarrow$ {[dni]}
+
+~
+
+Las bases Key-Value tampoco nos proveen métodos para operar sobre los valores almacenados por clave,
+puesto que la parte del valor es considera como una caja negra. Por esto, si se quiere tener
+una estructura de clave-valor que no sea extremadamente rigida (como sería el caso
+de guardar claves-valores del estilo [``empleadosQueAtendieronAdultos"] $\rightarrow$ \{[nroLegajo]\}),
+necesitamos poder iterar sobre las claves y operar con los valores por fuera de la base.
+
+Por ejemplo, podriamos definir la siguiente estructura (incompleta) con los datos necesarios para las consultas requeridas:
+\begin{enumerate}
+\item empleados[$<nroLegajo>$:``clientes"] $\rightarrow$ \{``adultos": int, ``total": int, ``clientesAtendidos": [dni]\}
+\item articulos[$<codigoDeBarra>$] $\rightarrow$ \{``cantidadVendida": int\}
+\item sectores[$<codigoSector>$] $\rightarrow$ \{``cantidadEmpleados":int, ``empleados":[nroLegajo]\}
+\item clientes[$<dni>$] $\rightarrow$ \{cantidadCompras: int\}
+\item empleados[$<nroLegajo>$:``sectores"] $\rightarrow$ \{``cantidadSectores": int, ``sectores":[codigoSector]\}
+\item clientes[``compras":$<edad>$] $\rightarrow$ {``cantidadCompras": int}
+\end{enumerate}
+
+Entonces, para responder la consulta ``Los empleados que atendieron clientes mayores de edad", el programador debería:
+
+\begin{itemize}
+\item conseguir los nroLegajo de los empleados utilizando claves[``empleados"]
+\item para cada nroLegajo, obtener el json almacenado en empleados[$<nroLegajo>$:``clientes"]
+\item mantener una lista de los empleados (nroLegajo) con mayor valor en el campo ``adultos" del json obtenido.
+\end{itemize}
+
+\subsection{Punto 2}
+Como comentamos anteriormente, las bases de datos Key-Value no proveen métodos para realizar operaciones sobre la información almacenada
+en los valores. Por lo tanto, el esquema de Map Reduce debería ser implementado en una capa superior, ya sea directamente por el programador o por una
+librería. Si no existe una librería que provea tal servicio, podría resultar mas conveniente proceder
+tal como lo haríamos para las consultas del punto 1.
+
+
+\subsection{Punto 3}
+El concepto de Sharding puede aplicarse de la misma manera tanto a bases Key-Value como Document, y deben tenerse en cuentas
+las mismas consideraciones sobre la distribución de las claves elegidas para realizar las particiones. Existe, sin embargo, una diferencia
+importante a considerar:
+dependiendo de como se manejen los atributos de una entidad en Key-Value (agregados en una clave$\rightarrow$valores o desagregados en varias clave:atributo$\rightarrow$valor), pueden
+darse casos en que una misma entidad tenga sus atributos repartidos entre distintos shards.
+
