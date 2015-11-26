@@ -101,3 +101,26 @@ Para valores de shard keys generados de forma pseudoaleatoria es conveniente ten
 basada en hash para mantener el balanceo uniforme por sobre una con rango.
 La existencia de mayor cantidad de shards favorecen a la uniformidad de la distribución.
 
+\subsection{Escenarios posibles donde seleccionar un atributo como Sharding}
+
+\begin{enumerate}
+\item Geografía de los datos. Por ejemplo, a una empresa que tiene clientes de varios
+países le conviene tener los datos agrupados por país a fin de mejorar la latencia de acceso.
+En ese caso, se selecciona como sharding key el atributo que tiene información respecto de la
+ubicación geográfica.
+\item Temporalidad de los datos. A una empresa que tiene datos que se utilizan en el día a día,
+y otros datos históricos le puede resultar conveniente mantener los primeros en un shard más
+potente ya que son los que incrementarían la performance del sistema en general. En ese caso,
+se selecciona como sharding key el atributo que tiene información temporal.
+\item Para garantizar tanto \emph{availability} como \emph{velocidad de respuesta}, se puede
+seleccionar como sharding key el nombre de las personas en un registro de personas en una
+configuración de \emph{replica sets}. Por ejemplo, los nombres que comiencen con A-M irían a
+un shard y entre la N-Z en otro.
+\end{enumerate}
+
+\subsection{Características deseables de un sharding key}
+
+Debe responder a una distribución uniforme de los datos, y en lo posible corresponder a un tipo básico
+(String, Int, Enum, Date-Time). Su longitud debe ser acotada. Por ejemplo, evitar strings demasiado largos.
+
+

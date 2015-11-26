@@ -1,0 +1,639 @@
+MongoDB shell version: 3.0.7
+connecting to: localhost:10004/admin
+Enabling sharding
+{ "ok" : 1 }
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"minCompatibleVersion" : 5,
+	"currentVersion" : 6,
+	"clusterId" : ObjectId("56551705e2240ac4548065b7")
+}
+  shards:
+	{  "_id" : "shard0",  "host" : "localhost:10000" }
+	{  "_id" : "shard1",  "host" : "localhost:10001" }
+	{  "_id" : "shard2",  "host" : "localhost:10002" }
+  balancer:
+	Currently enabled:  yes
+	Currently running:  no
+	Failed balancer rounds in last 5 attempts:  0
+	Migration Results for the last 24 hours: 
+		No recent migrations
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "sharding_test_hash",  "partitioned" : true,  "primary" : "shard0" }
+
+Create index hashed
+{
+	"raw" : {
+		"localhost:10000" : {
+			"createdCollectionAutomatically" : true,
+			"numIndexesBefore" : 1,
+			"numIndexesAfter" : 2,
+			"ok" : 1
+		}
+	},
+	"ok" : 1
+}
+Use index as sharding key
+{ "collectionsharded" : "sharding_test_hash.people", "ok" : 1 }
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 1.52MiB docs : 6666 chunks : 2
+ estimated data per chunk : 781KiB
+ estimated docs per chunk : 3333
+
+Shard shard1 at localhost:10001
+ data : 1.52MiB docs : 6655 chunks : 2
+ estimated data per chunk : 779KiB
+ estimated docs per chunk : 3327
+
+Shard shard2 at localhost:10002
+ data : 1.52MiB docs : 6679 chunks : 2
+ estimated data per chunk : 782KiB
+ estimated docs per chunk : 3339
+
+Totals
+ data : 4.57MiB docs : 20000 chunks : 6
+ Shard shard0 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.39% data, 33.39% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 3.06MiB docs : 13388 chunks : 2
+ estimated data per chunk : 1.53MiB
+ estimated docs per chunk : 6694
+
+Shard shard1 at localhost:10001
+ data : 3.04MiB docs : 13317 chunks : 2
+ estimated data per chunk : 1.52MiB
+ estimated docs per chunk : 6658
+
+Shard shard2 at localhost:10002
+ data : 3.04MiB docs : 13295 chunks : 2
+ estimated data per chunk : 1.52MiB
+ estimated docs per chunk : 6647
+
+Totals
+ data : 9.15MiB docs : 40000 chunks : 6
+ Shard shard0 contains 33.47% data, 33.47% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.29% data, 33.29% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.23% data, 33.23% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 4.57MiB docs : 20000 chunks : 2
+ estimated data per chunk : 2.28MiB
+ estimated docs per chunk : 10000
+
+Shard shard1 at localhost:10001
+ data : 4.57MiB docs : 20001 chunks : 2
+ estimated data per chunk : 2.28MiB
+ estimated docs per chunk : 10000
+
+Shard shard2 at localhost:10002
+ data : 4.57MiB docs : 19999 chunks : 2
+ estimated data per chunk : 2.28MiB
+ estimated docs per chunk : 9999
+
+Totals
+ data : 13.73MiB docs : 60000 chunks : 6
+ Shard shard0 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 6.13MiB docs : 26820 chunks : 2
+ estimated data per chunk : 3.06MiB
+ estimated docs per chunk : 13410
+
+Shard shard1 at localhost:10001
+ data : 6.1MiB docs : 26660 chunks : 2
+ estimated data per chunk : 3.05MiB
+ estimated docs per chunk : 13330
+
+Shard shard2 at localhost:10002
+ data : 6.06MiB docs : 26520 chunks : 2
+ estimated data per chunk : 3.03MiB
+ estimated docs per chunk : 13260
+
+Totals
+ data : 18.31MiB docs : 80000 chunks : 6
+ Shard shard0 contains 33.52% data, 33.52% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.32% data, 33.32% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.15% data, 33.15% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 7.65MiB docs : 33457 chunks : 2
+ estimated data per chunk : 3.82MiB
+ estimated docs per chunk : 16728
+
+Shard shard1 at localhost:10001
+ data : 7.62MiB docs : 33330 chunks : 2
+ estimated data per chunk : 3.81MiB
+ estimated docs per chunk : 16665
+
+Shard shard2 at localhost:10002
+ data : 7.6MiB docs : 33213 chunks : 2
+ estimated data per chunk : 3.8MiB
+ estimated docs per chunk : 16606
+
+Totals
+ data : 22.88MiB docs : 100000 chunks : 6
+ Shard shard0 contains 33.45% data, 33.45% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.21% data, 33.21% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 9.18MiB docs : 40136 chunks : 2
+ estimated data per chunk : 4.59MiB
+ estimated docs per chunk : 20068
+
+Shard shard1 at localhost:10001
+ data : 9.14MiB docs : 39963 chunks : 2
+ estimated data per chunk : 4.57MiB
+ estimated docs per chunk : 19981
+
+Shard shard2 at localhost:10002
+ data : 9.13MiB docs : 39901 chunks : 2
+ estimated data per chunk : 4.56MiB
+ estimated docs per chunk : 19950
+
+Totals
+ data : 27.46MiB docs : 120000 chunks : 6
+ Shard shard0 contains 33.44% data, 33.44% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.3% data, 33.3% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.25% data, 33.25% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 10.67MiB docs : 46647 chunks : 2
+ estimated data per chunk : 5.33MiB
+ estimated docs per chunk : 23323
+
+Shard shard1 at localhost:10001
+ data : 10.67MiB docs : 46659 chunks : 2
+ estimated data per chunk : 5.33MiB
+ estimated docs per chunk : 23329
+
+Shard shard2 at localhost:10002
+ data : 10.68MiB docs : 46694 chunks : 2
+ estimated data per chunk : 5.34MiB
+ estimated docs per chunk : 23347
+
+Totals
+ data : 32.04MiB docs : 140000 chunks : 6
+ Shard shard0 contains 33.31% data, 33.31% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.32% data, 33.32% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.35% data, 33.35% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 12.21MiB docs : 53357 chunks : 2
+ estimated data per chunk : 6.1MiB
+ estimated docs per chunk : 26678
+
+Shard shard1 at localhost:10001
+ data : 12.19MiB docs : 53275 chunks : 2
+ estimated data per chunk : 6.09MiB
+ estimated docs per chunk : 26637
+
+Shard shard2 at localhost:10002
+ data : 12.21MiB docs : 53368 chunks : 2
+ estimated data per chunk : 6.1MiB
+ estimated docs per chunk : 26684
+
+Totals
+ data : 36.62MiB docs : 160000 chunks : 6
+ Shard shard0 contains 33.34% data, 33.34% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.29% data, 33.29% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.35% data, 33.35% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 13.74MiB docs : 60057 chunks : 2
+ estimated data per chunk : 6.87MiB
+ estimated docs per chunk : 30028
+
+Shard shard1 at localhost:10001
+ data : 13.7MiB docs : 59890 chunks : 2
+ estimated data per chunk : 6.85MiB
+ estimated docs per chunk : 29945
+
+Shard shard2 at localhost:10002
+ data : 13.74MiB docs : 60053 chunks : 2
+ estimated data per chunk : 6.87MiB
+ estimated docs per chunk : 30026
+
+Totals
+ data : 41.19MiB docs : 180000 chunks : 6
+ Shard shard0 contains 33.36% data, 33.36% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.36% data, 33.36% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 15.25MiB docs : 66664 chunks : 2
+ estimated data per chunk : 7.62MiB
+ estimated docs per chunk : 33332
+
+Shard shard1 at localhost:10001
+ data : 15.23MiB docs : 66562 chunks : 2
+ estimated data per chunk : 7.61MiB
+ estimated docs per chunk : 33281
+
+Shard shard2 at localhost:10002
+ data : 15.28MiB docs : 66774 chunks : 2
+ estimated data per chunk : 7.64MiB
+ estimated docs per chunk : 33387
+
+Totals
+ data : 45.77MiB docs : 200000 chunks : 6
+ Shard shard0 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.38% data, 33.38% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 16.76MiB docs : 73257 chunks : 2
+ estimated data per chunk : 8.38MiB
+ estimated docs per chunk : 36628
+
+Shard shard1 at localhost:10001
+ data : 16.75MiB docs : 73207 chunks : 2
+ estimated data per chunk : 8.37MiB
+ estimated docs per chunk : 36603
+
+Shard shard2 at localhost:10002
+ data : 16.83MiB docs : 73536 chunks : 2
+ estimated data per chunk : 8.41MiB
+ estimated docs per chunk : 36768
+
+Totals
+ data : 50.35MiB docs : 220000 chunks : 6
+ Shard shard0 contains 33.29% data, 33.29% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.42% data, 33.42% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 18.3MiB docs : 79985 chunks : 2
+ estimated data per chunk : 9.15MiB
+ estimated docs per chunk : 39992
+
+Shard shard1 at localhost:10001
+ data : 18.25MiB docs : 79781 chunks : 2
+ estimated data per chunk : 9.12MiB
+ estimated docs per chunk : 39890
+
+Shard shard2 at localhost:10002
+ data : 18.36MiB docs : 80234 chunks : 2
+ estimated data per chunk : 9.18MiB
+ estimated docs per chunk : 40117
+
+Totals
+ data : 54.93MiB docs : 240000 chunks : 6
+ Shard shard0 contains 33.32% data, 33.32% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.24% data, 33.24% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.43% data, 33.43% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 19.83MiB docs : 86662 chunks : 2
+ estimated data per chunk : 9.91MiB
+ estimated docs per chunk : 43331
+
+Shard shard1 at localhost:10001
+ data : 19.77MiB docs : 86409 chunks : 2
+ estimated data per chunk : 9.88MiB
+ estimated docs per chunk : 43204
+
+Shard shard2 at localhost:10002
+ data : 19.89MiB docs : 86929 chunks : 2
+ estimated data per chunk : 9.94MiB
+ estimated docs per chunk : 43464
+
+Totals
+ data : 59.5MiB docs : 260000 chunks : 6
+ Shard shard0 contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.23% data, 33.23% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.43% data, 33.43% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 21.32MiB docs : 93188 chunks : 2
+ estimated data per chunk : 10.66MiB
+ estimated docs per chunk : 46594
+
+Shard shard1 at localhost:10001
+ data : 21.31MiB docs : 93118 chunks : 2
+ estimated data per chunk : 10.65MiB
+ estimated docs per chunk : 46559
+
+Shard shard2 at localhost:10002
+ data : 21.44MiB docs : 93694 chunks : 2
+ estimated data per chunk : 10.72MiB
+ estimated docs per chunk : 46847
+
+Totals
+ data : 64.08MiB docs : 280000 chunks : 6
+ Shard shard0 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.25% data, 33.25% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.46% data, 33.46% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 22.84MiB docs : 99816 chunks : 2
+ estimated data per chunk : 11.42MiB
+ estimated docs per chunk : 49908
+
+Shard shard1 at localhost:10001
+ data : 22.84MiB docs : 99805 chunks : 2
+ estimated data per chunk : 11.42MiB
+ estimated docs per chunk : 49902
+
+Shard shard2 at localhost:10002
+ data : 22.97MiB docs : 100379 chunks : 2
+ estimated data per chunk : 11.48MiB
+ estimated docs per chunk : 50189
+
+Totals
+ data : 68.66MiB docs : 300000 chunks : 6
+ Shard shard0 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.26% data, 33.26% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.45% data, 33.45% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 24.36MiB docs : 106455 chunks : 2
+ estimated data per chunk : 12.18MiB
+ estimated docs per chunk : 53227
+
+Shard shard1 at localhost:10001
+ data : 24.36MiB docs : 106445 chunks : 2
+ estimated data per chunk : 12.18MiB
+ estimated docs per chunk : 53222
+
+Shard shard2 at localhost:10002
+ data : 24.51MiB docs : 107100 chunks : 2
+ estimated data per chunk : 12.25MiB
+ estimated docs per chunk : 53550
+
+Totals
+ data : 73.24MiB docs : 320000 chunks : 6
+ Shard shard0 contains 33.26% data, 33.26% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.26% data, 33.26% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.46% data, 33.46% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 25.9MiB docs : 113176 chunks : 2
+ estimated data per chunk : 12.95MiB
+ estimated docs per chunk : 56588
+
+Shard shard1 at localhost:10001
+ data : 25.88MiB docs : 113090 chunks : 2
+ estimated data per chunk : 12.94MiB
+ estimated docs per chunk : 56545
+
+Shard shard2 at localhost:10002
+ data : 26.03MiB docs : 113734 chunks : 2
+ estimated data per chunk : 13.01MiB
+ estimated docs per chunk : 56867
+
+Totals
+ data : 77.81MiB docs : 340000 chunks : 6
+ Shard shard0 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.26% data, 33.26% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.45% data, 33.45% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 27.42MiB docs : 119810 chunks : 2
+ estimated data per chunk : 13.71MiB
+ estimated docs per chunk : 59905
+
+Shard shard1 at localhost:10001
+ data : 27.41MiB docs : 119787 chunks : 2
+ estimated data per chunk : 13.7MiB
+ estimated docs per chunk : 59893
+
+Shard shard2 at localhost:10002
+ data : 27.55MiB docs : 120403 chunks : 2
+ estimated data per chunk : 13.77MiB
+ estimated docs per chunk : 60201
+
+Totals
+ data : 82.39MiB docs : 360000 chunks : 6
+ Shard shard0 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.44% data, 33.44% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 28.93MiB docs : 126430 chunks : 2
+ estimated data per chunk : 14.46MiB
+ estimated docs per chunk : 63215
+
+Shard shard1 at localhost:10001
+ data : 28.94MiB docs : 126481 chunks : 2
+ estimated data per chunk : 14.47MiB
+ estimated docs per chunk : 63240
+
+Shard shard2 at localhost:10002
+ data : 29.08MiB docs : 127089 chunks : 2
+ estimated data per chunk : 14.54MiB
+ estimated docs per chunk : 63544
+
+Totals
+ data : 86.97MiB docs : 380000 chunks : 6
+ Shard shard0 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.44% data, 33.44% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 30.45MiB docs : 133076 chunks : 2
+ estimated data per chunk : 15.22MiB
+ estimated docs per chunk : 66538
+
+Shard shard1 at localhost:10001
+ data : 30.46MiB docs : 133116 chunks : 2
+ estimated data per chunk : 15.23MiB
+ estimated docs per chunk : 66558
+
+Shard shard2 at localhost:10002
+ data : 30.62MiB docs : 133808 chunks : 2
+ estimated data per chunk : 15.31MiB
+ estimated docs per chunk : 66904
+
+Totals
+ data : 91.55MiB docs : 400000 chunks : 6
+ Shard shard0 contains 33.26% data, 33.26% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.45% data, 33.45% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 31.99MiB docs : 139810 chunks : 2
+ estimated data per chunk : 15.99MiB
+ estimated docs per chunk : 69905
+
+Shard shard1 at localhost:10001
+ data : 32MiB docs : 139823 chunks : 2
+ estimated data per chunk : 16MiB
+ estimated docs per chunk : 69911
+
+Shard shard2 at localhost:10002
+ data : 32.12MiB docs : 140367 chunks : 2
+ estimated data per chunk : 16.06MiB
+ estimated docs per chunk : 70183
+
+Totals
+ data : 96.12MiB docs : 420000 chunks : 6
+ Shard shard0 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.29% data, 33.29% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.42% data, 33.42% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 33.52MiB docs : 146457 chunks : 2
+ estimated data per chunk : 16.75MiB
+ estimated docs per chunk : 73228
+
+Shard shard1 at localhost:10001
+ data : 33.51MiB docs : 146413 chunks : 2
+ estimated data per chunk : 16.75MiB
+ estimated docs per chunk : 73206
+
+Shard shard2 at localhost:10002
+ data : 33.67MiB docs : 147130 chunks : 2
+ estimated data per chunk : 16.83MiB
+ estimated docs per chunk : 73565
+
+Totals
+ data : 100.7MiB docs : 440000 chunks : 6
+ Shard shard0 contains 33.28% data, 33.28% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.43% data, 33.43% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 35.03MiB docs : 153070 chunks : 2
+ estimated data per chunk : 17.51MiB
+ estimated docs per chunk : 76535
+
+Shard shard1 at localhost:10001
+ data : 35.05MiB docs : 153167 chunks : 2
+ estimated data per chunk : 17.52MiB
+ estimated docs per chunk : 76583
+
+Shard shard2 at localhost:10002
+ data : 35.19MiB docs : 153763 chunks : 2
+ estimated data per chunk : 17.59MiB
+ estimated docs per chunk : 76881
+
+Totals
+ data : 105.28MiB docs : 460000 chunks : 6
+ Shard shard0 contains 33.27% data, 33.27% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 33.29% data, 33.29% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.42% data, 33.42% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 28.34MiB docs : 123833 chunks : 3
+ estimated data per chunk : 9.44MiB
+ estimated docs per chunk : 41277
+
+Shard shard1 at localhost:10001
+ data : 44.79MiB docs : 195734 chunks : 3
+ estimated data per chunk : 14.93MiB
+ estimated docs per chunk : 65244
+
+Shard shard2 at localhost:10002
+ data : 36.71MiB docs : 160433 chunks : 4
+ estimated data per chunk : 9.17MiB
+ estimated docs per chunk : 40108
+
+Totals
+ data : 109.86MiB docs : 480000 chunks : 10
+ Shard shard0 contains 25.79% data, 25.79% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 40.77% data, 40.77% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.42% data, 33.42% docs in cluster, avg obj size on shard : 240B
+
+
+Inserting 20000 entries
+
+Shard shard0 at localhost:10000
+ data : 29.56MiB docs : 129155 chunks : 3
+ estimated data per chunk : 9.85MiB
+ estimated docs per chunk : 43051
+
+Shard shard1 at localhost:10001
+ data : 46.64MiB docs : 203809 chunks : 3
+ estimated data per chunk : 15.54MiB
+ estimated docs per chunk : 67936
+
+Shard shard2 at localhost:10002
+ data : 38.23MiB docs : 167036 chunks : 4
+ estimated data per chunk : 9.55MiB
+ estimated docs per chunk : 41759
+
+Totals
+ data : 114.44MiB docs : 500000 chunks : 10
+ Shard shard0 contains 25.83% data, 25.83% docs in cluster, avg obj size on shard : 240B
+ Shard shard1 contains 40.76% data, 40.76% docs in cluster, avg obj size on shard : 240B
+ Shard shard2 contains 33.4% data, 33.4% docs in cluster, avg obj size on shard : 240B
+
+

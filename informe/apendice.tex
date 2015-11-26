@@ -1,0 +1,87 @@
+\section{Apéndice}
+
+\subsection{Status de los shardings}
+
+Incluímos a continuación un fragmento de la salida de MongoDB al correr los comandos \emph{sh.status()}
+y \emph{db.people.getShardDistribution()}:
+
+\begin{listing}
+\begin{minted}[
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  MongoDB shell version: 3.0.7
+  connecting to: localhost:10003/admin
+  Enabling sharding
+  { "ok" : 0, "errmsg" : "already enabled" }
+  --- Sharding Status ---
+    sharding version: {
+    "_id" : 1,
+    "minCompatibleVersion" : 5,
+    "currentVersion" : 6,
+    "clusterId" : ObjectId("5655105adce14eebdfb2d003")
+  }
+    shards:
+    {  "_id" : "shard0",  "host" : "localhost:10000" }
+    {  "_id" : "shard1",  "host" : "localhost:10001" }
+    balancer:
+    Currently enabled:  yes
+    Currently running:  no
+    Failed balancer rounds in last 5 attempts:  0
+    Migration Results for the last 24 hours:
+      2 : Success
+    databases:
+    {  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+    {  "_id" : "sharding_test_hash",  "partitioned" : true,  "primary" : "shard0" }
+
+  Create index hashed
+  {
+    "raw" : {
+      "localhost:10000" : {
+        "createdCollectionAutomatically" : true,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+      }
+    },
+    "ok" : 1
+  }
+}
+\end{minted}
+\caption{Standard output de MongoDB al momento de aplicar el sharding}
+\label{json-example}
+\end{listing}
+
+\begin{listing}
+\begin{minted}[
+               framesep=3mm,
+               linenos=true,
+               xleftmargin=21pt,
+               tabsize=4]{js}
+{
+  Use index as sharding key
+  { "collectionsharded" : "sharding_test_hash.people", "ok" : 1 }
+  Inserting 20000 entries
+
+  Shard shard0 at localhost:10000
+   data : 2.29MiB docs : 10025 chunks : 2
+   estimated data per chunk : 1.14MiB
+   estimated docs per chunk : 5012
+
+  Shard shard1 at localhost:10001
+   data : 2.28MiB docs : 9975 chunks : 2
+   estimated data per chunk : 1.14MiB
+   estimated docs per chunk : 4987
+
+  Totals
+   data : 4.57MiB docs : 20000 chunks : 4
+   Shard shard0 contains 50.12
+   Shard shard1 contains 49.87
+}
+\end{minted}
+\caption{db.people.getShardDistribution() luego de insertar los primeros 20000(2 shards)}
+\label{json-example}
+\end{listing}
+
