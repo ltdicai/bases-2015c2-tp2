@@ -52,4 +52,4 @@ class Sectores(Document):
 
 	meta = {'collection': "sectores"}
 
-__all__ = ['Sectores', 'Empleados', 'Clientes', 'Articulos', 'SectoresEmpleado', 'Compra', 'init']
+__all__ = ['Sectores', 'Empleados', 'Clientes', 'Articulos', 'SectoresEmpleado', 'Compra', 'ClientesAtendidos', 'init']

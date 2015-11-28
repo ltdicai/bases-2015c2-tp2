@@ -15,11 +15,11 @@ function reverse(s){
 
 var people = db.people;
 
-print(sh.status());
+sh.status();
 
 var names_m = ["Damián", "Raúl", "Leandro", "Alejandro", "Javier", "Iván", "Patricio", "Hernán", "Santiago", "Floral"]
 
-var names_f = ["Jazmín", "Clara", "Marina", "Merlina", "Laura", "Lucía", "Yanet", "Antonella", "María", "Patricia"]
+var names_f = ["Jazmín", "Clara", "Merlina", "Laura", "Lucía", "Yanet", "Antonella", "María", "Patricia", "Marina"]
 
 db.people.createIndex({codigo_postal: 1})
 
@@ -45,4 +45,4 @@ for(var idx = 0; idx < 20000; ++idx){
 	})
 }
 
-print(db.people.getShardDistribution());
+db.people.getShardDistribution();

@@ -20,8 +20,9 @@ function convertDate(str){
 var m = function(){
 	var date = convertDate(this.FechaDisposicion);
 	if(date){
-		var month = date.getMonth(); 
-		if (month == 3 && this.Tipo == "Resoluciones"){ 
+		var month = date.getMonth();
+		var year = date.getFullYear(); 
+		if (month == 3 && year == 2013 &&this.Tipo == "Resoluciones"){ 
 			emit(this.Tipo, 1); 
 		}
 	}

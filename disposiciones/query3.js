@@ -35,18 +35,24 @@ var r = function(key, values) {
 var res = db.disposiciones.mapReduce(m,r,{out: {inline: 1}, scope: {convertDate: convertDate}})
 printjson(res);
 
-//Find max
+//Find max values
 var max = null;
+var res2 = [];
 for(var idx = 0; idx < res.results.length; ++idx){
 	var item = res.results[idx];
 	if(max){
-		if (Math.max(max.value, item.value) != max.value) max = item;
+		if (max.value == item.value){
+			res2.push(item);
+		}
+		else if (Math.max(max.value, item.value) != max.value) {
+			res2 = [item];
+			max = item;
+		}
 	}
 	else{
 		max = item;
+		res2 = [item];
 	}
 }
 
-printjson(max);
-
-
+printjson(res2);
